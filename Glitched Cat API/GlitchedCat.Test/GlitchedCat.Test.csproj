@@ -19,4 +19,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GlitchedCat.API\GlitchedCat.API.csproj" />
+    <ProjectReference Include="..\GlitchedCat.Application\GlitchedCat.Application.csproj" />
+    <ProjectReference Include="..\GlitchedCat.Domain\GlitchedCat.Domain.csproj" />
+    <ProjectReference Include="..\GlitchedCat.Infra.Data\GlitchedCat.Infra.Data.csproj" />
+    <ProjectReference Include="..\GlitchedCat.Infra.IoC\GlitchedCat.Infra.IoC.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -10,5 +10,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GlitchedCat.Infra.Data\GlitchedCat.Infra.Data.csproj" />
+    <ProjectReference Include="..\GlitchedCat.Infra.IoC\GlitchedCat.Infra.IoC.csproj" />
+  </ItemGroup>
+
 
 </Project>
