@@ -3,19 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlitchedCat.Domain", "GlitchedCat.Domain\GlitchedCat.Domain.csproj", "{1D140AA2-9E9D-4B43-AB96-43D122768741}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlitchedCat.Domain", "GlitchedCat.Domain\GlitchedCat.Domain.csproj", "{1D140AA2-9E9D-4B43-AB96-43D122768741}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlitchedCat.Application", "GlitchedCat.Application\GlitchedCat.Application.csproj", "{A31E255F-B22B-4897-9584-9A4867244505}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlitchedCat.Application", "GlitchedCat.Application\GlitchedCat.Application.csproj", "{A31E255F-B22B-4897-9584-9A4867244505}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlitchedCat.Infra.Data", "GlitchedCat.Infra.Data\GlitchedCat.Infra.Data.csproj", "{5E70CC9E-B072-4F6B-8AAF-8FEC01D0BE97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlitchedCat.Infra.Data", "GlitchedCat.Infra.Data\GlitchedCat.Infra.Data.csproj", "{5E70CC9E-B072-4F6B-8AAF-8FEC01D0BE97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlitchedCat.Infra.IoC", "GlitchedCat.Infra.IoC\GlitchedCat.Infra.IoC.csproj", "{FB712172-A3F0-4FC3-ADF8-26A15DCE0F01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlitchedCat.Infra.IoC", "GlitchedCat.Infra.IoC\GlitchedCat.Infra.IoC.csproj", "{FB712172-A3F0-4FC3-ADF8-26A15DCE0F01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlitchedCat.API", "GlitchedCat.API\GlitchedCat.API.csproj", "{AA985B2E-2D52-45E0-96BF-4074D83CC880}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlitchedCat.API", "GlitchedCat.API\GlitchedCat.API.csproj", "{AA985B2E-2D52-45E0-96BF-4074D83CC880}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlitchedCat.Test", "GlitchedCat.Test\GlitchedCat.Test.csproj", "{B9D146B3-C16F-4E68-8034-356A88A44B1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlitchedCat.Test", "GlitchedCat.Test\GlitchedCat.Test.csproj", "{B9D146B3-C16F-4E68-8034-356A88A44B1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlitchedCat.Infra.Data.MongoDB", "GlitchedCat.Infra.Data.MongoDB\GlitchedCat.Infra.Data.MongoDB.csproj", "{71F5CD0C-900D-4406-A4D2-DAB8F851A3F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlitchedCat.Infra.Data.MongoDB", "GlitchedCat.Infra.Data.MongoDB\GlitchedCat.Infra.Data.MongoDB.csproj", "{71F5CD0C-900D-4406-A4D2-DAB8F851A3F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra.Data", "Infra.Data", "{94B106B2-57D9-416D-92A1-0A621276459C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Azure", "Azure", "{DADF74FB-6DA8-456D-ADCA-6C718EF37316}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Functions", "Functions", "{BFBFCAA2-D4E2-4053-978B-1FE6D116509A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryGap", "BinaryGap\BinaryGap.csproj", "{8B0C51DA-14EF-450C-9352-500E21D8D6A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,9 +59,19 @@ Global
 		{71F5CD0C-900D-4406-A4D2-DAB8F851A3F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71F5CD0C-900D-4406-A4D2-DAB8F851A3F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71F5CD0C-900D-4406-A4D2-DAB8F851A3F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B0C51DA-14EF-450C-9352-500E21D8D6A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B0C51DA-14EF-450C-9352-500E21D8D6A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B0C51DA-14EF-450C-9352-500E21D8D6A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B0C51DA-14EF-450C-9352-500E21D8D6A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5E70CC9E-B072-4F6B-8AAF-8FEC01D0BE97} = {94B106B2-57D9-416D-92A1-0A621276459C}
+		{71F5CD0C-900D-4406-A4D2-DAB8F851A3F7} = {94B106B2-57D9-416D-92A1-0A621276459C}
+		{BFBFCAA2-D4E2-4053-978B-1FE6D116509A} = {DADF74FB-6DA8-456D-ADCA-6C718EF37316}
+		{8B0C51DA-14EF-450C-9352-500E21D8D6A4} = {BFBFCAA2-D4E2-4053-978B-1FE6D116509A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE48442E-4493-4A70-8244-041807278ED0}
