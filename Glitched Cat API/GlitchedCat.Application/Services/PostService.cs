@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GlitchedCat.Domain.Entities;
+using GlitchedCat.Infra.Data;
 
-namespace GlitchedCat.Domain.Services
+namespace GlitchedCat.Application.Services
 {
     public interface IDomainService<T> where T : BaseEntity
     {
@@ -41,6 +42,7 @@ namespace GlitchedCat.Domain.Services
         public async Task UpdateAsync(Post entity)
         {
             await _postRepository.UpdateAsync(entity);
+
         }
 
         public async Task RemoveAsync(Post entity)

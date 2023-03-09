@@ -1,6 +1,6 @@
 using MediatR;
 using System;
-using GlitchedCat.API.Models.Blog;
+using GlitchedCat.Domain.Common.Models.Blog;
 
 namespace GlitchedCat.Application.Commands
 {

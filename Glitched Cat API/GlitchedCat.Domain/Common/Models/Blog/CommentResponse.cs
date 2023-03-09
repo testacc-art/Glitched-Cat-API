@@ -1,6 +1,6 @@
 using System;
 
-namespace GlitchedCat.API.Models.Blog
+namespace GlitchedCat.Domain.Common.Models.Blog
 {
     public class CommentResponse
     {

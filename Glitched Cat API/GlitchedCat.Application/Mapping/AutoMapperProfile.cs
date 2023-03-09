@@ -1,5 +1,5 @@
 using AutoMapper;
-using GlitchedCat.API.Models.Blog;
+using GlitchedCat.Domain.Common.Models.Blog;
 using GlitchedCat.Domain.Entities;
 
 namespace GlitchedCat.Application.Mapping

@@ -1,8 +1,10 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using GlitchedCat.Application.Commands;
+using GlitchedCat.Application.Services;
 using GlitchedCat.Domain.Entities;
-using GlitchedCat.Domain.Services;
+using GlitchedCat.Domain.Exceptions;
 using MediatR;
 
 namespace GlitchedCat.Application.Handlers

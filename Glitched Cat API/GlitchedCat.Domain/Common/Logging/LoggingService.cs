@@ -7,6 +7,7 @@ namespace GlitchedCat.Domain.Common.Logging
 {
     public class LoggingService : ILogger
     {
+        
         private readonly ILogger<LoggingService> _logger;
 
         public LoggingService(ILogger<LoggingService> logger)

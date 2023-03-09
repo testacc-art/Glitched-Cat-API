@@ -1,9 +1,11 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using GlitchedCat.API.Models.Blog;
 using GlitchedCat.Application.Queries;
+using GlitchedCat.Domain.Common.Models.Blog;
 using GlitchedCat.Domain.Entities;
+using GlitchedCat.Domain.Exceptions;
 using GlitchedCat.Infra.Data;
 using MediatR;
 

@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GlitchedCat.API\GlitchedCat.API.csproj" />
     <ProjectReference Include="..\GlitchedCat.Domain\GlitchedCat.Domain.csproj" />
+    <ProjectReference Include="..\GlitchedCat.Infra.Data\GlitchedCat.Infra.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

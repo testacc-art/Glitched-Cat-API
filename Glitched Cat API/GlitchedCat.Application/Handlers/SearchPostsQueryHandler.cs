@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using GlitchedCat.API.Models.Blog;
 using GlitchedCat.Application.Queries;
+using GlitchedCat.Domain.Common.Models.Blog;
 using GlitchedCat.Domain.Entities;
+using GlitchedCat.Domain.Extensions;
 using GlitchedCat.Infra.Data;
 using MediatR;
 
@@ -23,7 +24,8 @@ namespace GlitchedCat.Application.Handlers
 
         public async Task<IEnumerable<PostResponse>> Handle(SearchPostsQuery request, CancellationToken cancellationToken)
         {
-            var posts = await _postRepository.SearchAsync(request.Title, request.Author, request.StartDate, request.EndDate);
+            var predicate = SearchPostsQuery.ToPredicate(request);
+            var posts = await _postRepository.SearchAsync(predicate);
             var postResponses = _mapper.Map<IEnumerable<PostResponse>>(posts);
             return postResponses;
         }

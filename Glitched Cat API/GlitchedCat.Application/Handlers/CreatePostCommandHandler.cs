@@ -3,8 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using GlitchedCat.Application.Commands;
+using GlitchedCat.Application.Services;
 using GlitchedCat.Domain.Entities;
-using GlitchedCat.Domain.Services;
 using MediatR;
 
 namespace GlitchedCat.Application.Handlers

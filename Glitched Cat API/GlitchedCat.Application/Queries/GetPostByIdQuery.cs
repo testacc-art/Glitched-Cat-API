@@ -1,5 +1,5 @@
 using System;
-using GlitchedCat.API.Models.Blog;
+using GlitchedCat.Domain.Common.Models.Blog;
 using MediatR;
 
 namespace GlitchedCat.Application.Queries
