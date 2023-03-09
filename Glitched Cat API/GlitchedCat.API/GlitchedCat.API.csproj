@@ -8,12 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.1.23111.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GlitchedCat.Application\GlitchedCat.Application.csproj" />
     <ProjectReference Include="..\GlitchedCat.Infra.Data\GlitchedCat.Infra.Data.csproj" />
-    <ProjectReference Include="..\GlitchedCat.Infra.IoC\GlitchedCat.Infra.IoC.csproj" />
+<!--    <ProjectReference Include="..\GlitchedCat.Infra.IoC\GlitchedCat.Infra.IoC.csproj" />-->
   </ItemGroup>
 
 
