@@ -5,7 +5,11 @@ using Newtonsoft.Json;
 
 namespace GlitchedCat.Domain.Common.Logging
 {
-    public class LoggingService : ILogger
+    public interface ILoggingService
+    {
+        Task LogAsync(LogData log);
+    }
+    public class LoggingService : ILoggingService
     {
         
         private readonly ILogger<LoggingService> _logger;

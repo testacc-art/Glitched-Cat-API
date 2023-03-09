@@ -10,7 +10,7 @@ namespace GlitchedCat.Infra.Data
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-                    "Server=localhost;Database=BlogDb;Trusted_Connection=True;");
+                    "Server=localhost\\SQLEXPRESS;Database=BlogDb;Trusted_Connection=true;Encrypt=False;");
             }
         }
 

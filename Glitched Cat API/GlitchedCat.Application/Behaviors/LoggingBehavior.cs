@@ -9,9 +9,9 @@ namespace GlitchedCat.Application.Behaviors;
 
 public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 {
-    private readonly LoggingService _loggingService;
+    private readonly ILoggingService _loggingService;
 
-    public LoggingBehavior(LoggingService loggingService)
+    public LoggingBehavior(ILoggingService loggingService)
     {
         _loggingService = loggingService;
     }

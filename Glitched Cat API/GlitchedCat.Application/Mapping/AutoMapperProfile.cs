@@ -1,4 +1,5 @@
 using AutoMapper;
+using GlitchedCat.Application.Commands;
 using GlitchedCat.Domain.Common.Models.Blog;
 using GlitchedCat.Domain.Entities;
 
@@ -21,6 +22,10 @@ namespace GlitchedCat.Application.Mapping
             CreateMap<CommentRequest, Comment>()
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.PostId, opt => opt.Ignore());
+            
+            CreateMap<PostRequest, CreatePostCommand>()
+                .ForMember(dest => dest.PostRequest, opt => opt.MapFrom(src => src))
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
         }
     }
 }
