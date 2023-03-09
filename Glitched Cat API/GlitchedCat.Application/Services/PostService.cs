@@ -6,15 +6,6 @@ using GlitchedCat.Infra.Data;
 
 namespace GlitchedCat.Application.Services
 {
-    public interface IDomainService<T> where T : BaseEntity
-    {
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T> GetByIdAsync(Guid id);
-        Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task RemoveAsync(T entity);
-    }
-
     public class PostService : IDomainService<Post>
     {
         private readonly IRepository<Post> _postRepository;
@@ -48,6 +39,11 @@ namespace GlitchedCat.Application.Services
         public async Task RemoveAsync(Post entity)
         {
             await _postRepository.RemoveAsync(entity);
+        }
+        
+        public async Task<Post> GetFirstOrDefaultAsync()
+        {
+            return await _postRepository.FirstOrDefaultAsync();
         }
     }
 }

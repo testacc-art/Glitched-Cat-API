@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GlitchedCat.Infra.Data.MongoDB
+﻿namespace GlitchedCat.Infra.Data.MongoDB
 {
     public class Class1
     {

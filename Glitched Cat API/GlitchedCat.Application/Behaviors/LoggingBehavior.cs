@@ -22,10 +22,11 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         
         var log = new LogData()
         {
-            Message = $"Handling {typeof(TRequest).Name}",
+            Log = $"Handling {typeof(TRequest).Name}",
             ExecutionTime = DateTime.Now,
         };
-        await _loggingService.LogAsync(log);
+        
+        _ = _loggingService.LogAsync(log);
         
         stopwatch.Start();
 
@@ -33,11 +34,11 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         
         stopwatch.Stop();
         
-        log.Message = $"Handled {typeof(TRequest).Name}";
+        log.Log = $"Handled {typeof(TRequest).Name}";
         log.ExecutionTime = DateTime.Now;
         log.TimeElapsed = stopwatch.Elapsed;
 
-        await _loggingService.LogAsync(log);
+        _ = _loggingService.LogAsync(log);
 
         return response;
     }

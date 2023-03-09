@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using GlitchedCat.Domain.Common.Logging;
 
 namespace GlitchedCat.API.Controllers
 {
@@ -16,9 +15,9 @@ namespace GlitchedCat.API.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILoggingService _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILoggingService logger)
         {
             _logger = logger;
         }
@@ -27,13 +26,20 @@ namespace GlitchedCat.API.Controllers
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
+
+            var result = _logger.ExecuteAndLogAsync(Range, rng).Result;
+            return result;
+        }
+
+        private static IEnumerable<WeatherForecast> Range(Random random)
+        {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                {
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = random.Next(-20, 55),
+                    Summary = Summaries[random.Next(Summaries.Length)]
+                })
+                .ToArray();
         }
     }
 }

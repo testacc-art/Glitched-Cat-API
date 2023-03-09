@@ -6,7 +6,7 @@ using GlitchedCat.Domain.Common.Models.Blog;
 using GlitchedCat.Domain.Entities;
 using MediatR;
 
-namespace GlitchedCat.Application.Queries
+namespace GlitchedCat.Application.Queries.Blog
 {
     public class SearchPostsQuery : IRequest<IEnumerable<PostResponse>>
     {

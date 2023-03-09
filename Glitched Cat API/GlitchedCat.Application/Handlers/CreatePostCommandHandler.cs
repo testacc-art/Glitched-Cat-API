@@ -13,17 +13,26 @@ namespace GlitchedCat.Application.Handlers
     {
         private readonly IMapper _mapper;
         private readonly IDomainService<Post> _postService;
+        private readonly IDomainService<User> _userService;
 
-        public CreatePostCommandHandler(IDomainService<Post> postService, IMapper mapper)
+        public CreatePostCommandHandler(IDomainService<Post> postService, IMapper mapper, IDomainService<User> userService)
         {
             _postService = postService;
             _mapper = mapper;
+            _userService = userService;
         }
 
         public async Task<Guid> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
+            //TODO: Change it when implement auth
+            #region ToChange
+
+            var userId = (await _userService.GetFirstOrDefaultAsync()).Id;
+
+            #endregion
+            
             var post = _mapper.Map<Post>(request.PostRequest);
-            post.UserId = new Guid(request.UserId);
+            post.UserId = userId;
             await _postService.AddAsync(post);
             return post.Id;
         }

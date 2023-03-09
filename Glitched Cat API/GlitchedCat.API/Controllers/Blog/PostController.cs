@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using GlitchedCat.Application.Commands;
-using GlitchedCat.Application.Queries;
+using GlitchedCat.Application.Queries.Blog;
 using GlitchedCat.Domain.Common.Models.Blog;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +49,6 @@ namespace GlitchedCat.API.Controllers.Blog
         public async Task<IActionResult> CreatePost([FromBody] PostRequest postRequest)
         {
             var command = _mapper.Map<CreatePostCommand>(postRequest);
-            command.UserId = Guid.NewGuid().ToString(); //TODO: change it when implement auth
             var result = await _mediator.Send(command);
 
             return CreatedAtAction(nameof(GetPostById), new { id = result }, _mapper.Map<PostResponse>(result));

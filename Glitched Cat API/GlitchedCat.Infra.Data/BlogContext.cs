@@ -5,7 +5,7 @@ namespace GlitchedCat.Infra.Data
 {
     public class BlogContext : DbContext
     {
-        protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
@@ -14,21 +14,20 @@ namespace GlitchedCat.Infra.Data
             }
         }
 
-        public DbSet<Post> Posts
-        {
-            get;
-            set;
-        }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<User> Users { get; set; }
 
-        public DbSet<Comment> Comments
+        protected override void OnModelCreating( ModelBuilder modelBuilder )
         {
-            get;
-            set;
-        }
-        public DbSet<User> Users
-        {
-            get;
-            set;
+            modelBuilder.Entity<Post>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<Comment>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<User>()
+                .HasKey(c => c.Id);
         }
     }
 }

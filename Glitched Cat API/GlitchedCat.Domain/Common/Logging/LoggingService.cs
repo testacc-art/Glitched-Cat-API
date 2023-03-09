@@ -1,6 +1,6 @@
 using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Threading.Tasks; 
 using Newtonsoft.Json;
 
 namespace GlitchedCat.Domain.Common.Logging
@@ -8,44 +8,10 @@ namespace GlitchedCat.Domain.Common.Logging
     public interface ILoggingService
     {
         Task LogAsync(LogData log);
+        Task<TResponse> ExecuteAndLogAsync<TRequest, TResponse>(Func<TRequest, TResponse> action, TRequest request);
     }
     public class LoggingService : ILoggingService
     {
-        
-        private readonly ILogger<LoggingService> _logger;
-
-        public LoggingService(ILogger<LoggingService> logger)
-        {
-            _logger = logger;
-        }
-        
-        public LoggingService()
-        {
-            // Default constructor does nothing
-        }
-
-        public IDisposable BeginScope<TState>(TState state)
-        {
-            return _logger.BeginScope(state);
-        }
-
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            return _logger.IsEnabled(logLevel);
-        }
-
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            // Convert state to JSON for logging
-            var json = JsonConvert.SerializeObject(state);
-
-            // Send logs to data lake
-            SendToDataLake(json);
-
-            // Log to console or other logging destination
-            _logger.Log(logLevel, eventId, state, exception, formatter);
-        }
-        
         public Task LogAsync(LogData log)
         {
             var json = JsonConvert.SerializeObject(log);
@@ -58,10 +24,33 @@ namespace GlitchedCat.Domain.Common.Logging
             //TODO: Code to send logs to data lake goes here
             return Task.CompletedTask;
         }
-
-        private async void SendToDataLake(string json)
+        
+        public Task<TResponse> ExecuteAndLogAsync<TRequest, TResponse>(Func<TRequest, TResponse> action, TRequest request)
         {
-            //TODO: Code to send logs to data lake goes here
+            var stopwatch = new Stopwatch();
+        
+            var log = new LogData()
+            {
+                Log = $"Executing {typeof(TRequest).Name}",
+                ExecutionTime = DateTime.Now,
+            };
+            _ = LogAsync(log);
+        
+            stopwatch.Start();
+
+            // Execute method
+            var response = action(request);
+            
+            stopwatch.Stop();
+        
+            log.Log = $"Executed {typeof(TRequest).Name}";
+            log.ExecutionTime = DateTime.Now;
+            log.TimeElapsed = stopwatch.Elapsed;
+
+            _ = LogAsync(log);
+
+            return Task.FromResult(response);
         }
+
     }
 }

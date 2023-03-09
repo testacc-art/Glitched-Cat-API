@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using GlitchedCat.Application.Queries;
+using GlitchedCat.Application.Queries.Blog;
 using GlitchedCat.Domain.Common.Models.Blog;
 using GlitchedCat.Domain.Entities;
-using GlitchedCat.Domain.Extensions;
 using GlitchedCat.Infra.Data;
 using MediatR;
 

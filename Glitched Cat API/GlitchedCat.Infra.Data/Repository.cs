@@ -16,6 +16,10 @@ namespace GlitchedCat.Infra.Data
         Task UpdateAsync( T entity );
         Task RemoveAsync( T entity );
         Task<IEnumerable<T>> SearchAsync(Expression<Func<T, bool>> predicate);
+        Task DeleteAsync(T entity);
+
+        Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate = null,
+            params Expression<Func<T, object>>[] includeProperties);
     }
 
     public class Repository<T> : IRepository<T> where T : BaseEntity
@@ -63,5 +67,28 @@ namespace GlitchedCat.Infra.Data
                 .ToListAsync();
             return entities;
         }
+        
+        public async Task DeleteAsync(T entity)
+        {
+            _dataContext.Set<T>().Remove(entity);
+            await _dataContext.SaveChangesAsync();
+        }
+        
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _dataContext.Set<T>();
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+
+            query = query.AsNoTracking();
+
+            return await Task.FromResult(query.FirstOrDefault());
+        }
+
     }
 }

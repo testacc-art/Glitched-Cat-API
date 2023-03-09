@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using GlitchedCat.Application.Behaviors;
 using GlitchedCat.Infra.Data;
@@ -9,9 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FluentValidation;
 using GlitchedCat.Application.Commands;
+using GlitchedCat.Application.Handlers;
 using GlitchedCat.Application.Mapping;
+using GlitchedCat.Application.Queries.Blog;
 using GlitchedCat.Application.Services;
 using GlitchedCat.Domain.Common.Logging;
+using GlitchedCat.Domain.Common.Models.Blog;
 using GlitchedCat.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -32,18 +37,31 @@ namespace GlitchedCat.API
         {
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).GetTypeInfo().Assembly));
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreatePostCommand).GetTypeInfo().Assembly));
+            
             // Register the MediatR pipeline behaviors
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
             // Register the MediatR handlers
+            services.AddScoped<IRequestHandler<CreatePostCommand, Guid>, CreatePostCommandHandler>();
+            services.AddScoped<IRequestHandler<DeletePostCommand>, DeletePostCommandHandler>();
+            services.AddScoped<IRequestHandler<GetAllPostsQuery, IEnumerable<PostResponse>>, GetAllPostsQueryHandler>();
+            services.AddScoped<IRequestHandler<GetPostByIdQuery, PostResponse>, GetPostByIdQueryHandler>();
+            services.AddScoped<IRequestHandler<SearchPostsQuery, IEnumerable<PostResponse>>, SearchPostsQueryHandler>();
+            services.AddScoped<IRequestHandler<UpdatePostCommand>, UpdatePostCommandHandler>();
+            services.AddScoped<IRequestHandler<GetAllUsersQuery, IEnumerable<UserResponse>>, GetAllUsersQueryHandler>();
+            services.AddScoped<IRequestHandler<GetUserByIdQuery, UserResponse>, GetUserByIdQueryHandler>();
+            services.AddScoped<IRequestHandler<CreateUserCommand, Guid>, CreateUserCommandHandler>();
+            services.AddScoped<IRequestHandler<UpdateUserCommand>, UpdateUserCommandHandler>();
+            services.AddScoped<IRequestHandler<DeleteUserCommand>, DeleteUserCommandHandler>();
 
+            services.AddTransient<IRequest<PostResponse>, GetPostByIdQuery>();
+            services.AddTransient<IRequest<IEnumerable<PostResponse>>, SearchPostsQuery>();
+
+            services.AddDbContext<BlogContext>();
             // services.AddEntityFrameworkSqlServer().AddDbContext<BlogContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).GetTypeInfo().Assembly));
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreatePostCommand).GetTypeInfo().Assembly));
             
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
             
@@ -56,10 +74,20 @@ namespace GlitchedCat.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GlitchedCat API", Version = "v1" });
             });
             
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            
+            #region Register Services
             services.AddScoped<IDomainService<Post>, PostService>();
+            services.AddScoped<IDomainService<Comment>, CommentService>();
+            services.AddScoped<IDomainService<User>, UserService>();
+            #endregion
+
+
+            #region Register Repos
             services.AddScoped<IRepository<Post>, Repository<Post>>();
             services.AddScoped<IRepository<Comment>, Repository<Comment>>();
             services.AddScoped<IRepository<User>, Repository<User>>();
+            #endregion
 
             services.AddControllers();
         }
