@@ -7,6 +7,6 @@ version: 2
 
 updates:
   - package-ecosystem: "nuget"
-    directory: "/"
+    directory: "/Glitched Cat API"
     schedule:
       interval: "daily"
