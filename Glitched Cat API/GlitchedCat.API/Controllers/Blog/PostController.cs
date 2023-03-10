@@ -5,6 +5,7 @@ using GlitchedCat.Application.Commands;
 using GlitchedCat.Application.Queries.Blog;
 using GlitchedCat.Domain.Common.Models.Blog;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GlitchedCat.API.Controllers.Blog
@@ -46,13 +47,21 @@ namespace GlitchedCat.API.Controllers.Blog
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePost([FromBody] PostRequest postRequest)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Guid>> CreatePost([FromBody] PostRequest postRequest)
         {
             var command = _mapper.Map<CreatePostCommand>(postRequest);
-            var result = await _mediator.Send(command);
+            var postId = await _mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetPostById), new { id = result }, _mapper.Map<PostResponse>(result));
+            if (postId == Guid.Empty)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtRoute(nameof(GetPostById), new { id = postId }, postId);
         }
+
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdatePost(Guid id, [FromBody] PostRequest postRequest)

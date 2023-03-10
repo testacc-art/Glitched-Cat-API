@@ -22,6 +22,7 @@ namespace GlitchedCat.Test.APITests.Controllers.Blog
         private readonly IMapper _mapper;
         private readonly Mock<IMediator> _mediator;
         private readonly Mock<ILogger<PostController>> _logger;
+        private readonly Mock<IMapper> _mapperMock;
 
         public PostControllerTests()
         {
@@ -29,9 +30,10 @@ namespace GlitchedCat.Test.APITests.Controllers.Blog
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
             _mapper = config.CreateMapper();
 
-            // Initialize mediator and logger mock
+            // Initialize mediator, logger and mapper mock
             _mediator = new Mock<IMediator>();
             _logger = new Mock<ILogger<PostController>>();
+            _mapperMock = new Mock<IMapper>();
         }
 
         [Fact]
@@ -90,7 +92,6 @@ namespace GlitchedCat.Test.APITests.Controllers.Blog
         {
             // Arrange
             var postId = Guid.NewGuid();
-            var getPostByIdQuery = new GetPostByIdQuery { Id = postId };
             _mediator.Setup(x => x.Send(It.IsAny<GetPostByIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((PostResponse)null);
 
@@ -105,39 +106,30 @@ namespace GlitchedCat.Test.APITests.Controllers.Blog
         }
 
         [Fact]
-        public async Task CreatePost_WithValidRequest_ReturnsCreatedAtAction_WithCreatedPost()
+        public async Task CreatePost_ReturnsCreatedAtRoute_WithNewPostId()
         {
             // Arrange
             var postRequest = new PostRequest { Title = "Test Post", Content = "Test Content" };
-            var createPostCommand = new CreatePostCommand { PostRequest = postRequest, UserId = "testuser" };
+            var command = new CreatePostCommand { PostRequest = postRequest, UserId = "testuser" };
             var postId = Guid.NewGuid();
-            _mediator.Setup(x => x.Send(It.IsAny<CreatePostCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(postId);
+            _mediator.Setup(x => x.Send(It.IsAny<CreatePostCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync(postId);
 
-            // Create a mock for IMapper
-            var mapperMock = new Mock<IMapper>();
+            var expectedRouteValues = new { id = postId };
+            var expectedCreatedAtRouteResult = new CreatedAtRouteResult(nameof(PostController.GetPostById), expectedRouteValues, postId);
 
-// Set up the mock to return a PostResponse object when Map is called with a CreatePostCommand object
-            var postResponse = new PostResponse { Id = Guid.NewGuid(), Title = "Test Post", Content = "Test Content" };
-            mapperMock.Setup(x => x.Map<PostResponse>(It.IsAny<CreatePostCommand>()))
-                .Returns(postResponse);
-
-// Use the mapperMock in the PostController constructor and test the CreatePost method
-            var postController = new PostController(mapperMock.Object, _mediator.Object);
-
+            var postController = new PostController(_mapperMock.Object, _mediator.Object);
 
             // Act
-            var response = await postController.CreatePost(postRequest);
+            var result = await postController.CreatePost(postRequest);
 
             // Assert
-            var createdAtActionResult = response as CreatedAtActionResult;
-            createdAtActionResult.Should().NotBeNull();
-            createdAtActionResult.ActionName.Should().Be(nameof(PostController.GetPostById));
-            createdAtActionResult.RouteValues.Should().ContainKey("id");
-            createdAtActionResult.RouteValues["id"].Should().Be(postId);
-            createdAtActionResult.Value.Should().BeEquivalentTo(postResponse);
+            Assert.IsType<CreatedAtRouteResult>(result.Result);
+            var createdAtRouteResult = (CreatedAtRouteResult)result.Result;
+            Assert.Equal(expectedRouteValues, createdAtRouteResult.RouteValues);
+            Assert.Equal(postId, createdAtRouteResult.Value);
 
             _mediator.Verify(x => x.Send(It.IsAny<CreatePostCommand>(), It.IsAny<CancellationToken>()), Times.Once);
         }
+
     }
 } 
