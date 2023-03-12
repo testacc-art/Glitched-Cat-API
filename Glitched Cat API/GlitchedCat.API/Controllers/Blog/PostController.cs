@@ -74,13 +74,13 @@ namespace GlitchedCat.API.Controllers.Blog
             return NoContent();
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeletePost(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePost(string id)
         {
-            var command = new DeletePostCommand { Id = id };
+            var command = new DeletePostCommand { Id = Guid.Parse(id) };
             await _mediator.Send(command);
 
-            return NoContent();
+            return Accepted();
         }
     }
 }
