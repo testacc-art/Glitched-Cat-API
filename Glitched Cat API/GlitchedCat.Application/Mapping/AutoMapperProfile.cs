@@ -38,6 +38,12 @@ namespace GlitchedCat.Application.Mapping
                 .ForMember(dest => dest.PostRequest, opt => opt.MapFrom(src => src))
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
             
+            CreateMap<PostRequest, UpdatePostCommand>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.AuthorId, opt => opt.Ignore())
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
+            
             CreateMap<CreatePostCommand, Post>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.PostRequest.Title))

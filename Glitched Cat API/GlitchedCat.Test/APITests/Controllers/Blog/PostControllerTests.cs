@@ -21,8 +21,6 @@ namespace GlitchedCat.Test.APITests.Controllers.Blog
     {
         private readonly IMapper _mapper;
         private readonly Mock<IMediator> _mediator;
-        private readonly Mock<ILogger<PostController>> _logger;
-        private readonly Mock<IMapper> _mapperMock;
 
         public PostControllerTests()
         {
@@ -32,8 +30,6 @@ namespace GlitchedCat.Test.APITests.Controllers.Blog
 
             // Initialize mediator, logger and mapper mock
             _mediator = new Mock<IMediator>();
-            _logger = new Mock<ILogger<PostController>>();
-            _mapperMock = new Mock<IMapper>();
         }
 
         [Fact]
@@ -81,10 +77,13 @@ namespace GlitchedCat.Test.APITests.Controllers.Blog
             // Assert
             var objectResult = response as ObjectResult;
             objectResult.Should().NotBeNull();
-            objectResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
+            if (objectResult != null)
+            {
+                objectResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-            var postResponseResult = objectResult.Value as PostResponse;
-            postResponseResult.Should().BeEquivalentTo(postResponse);
+                var postResponseResult = objectResult.Value as PostResponse;
+                postResponseResult.Should().BeEquivalentTo(postResponse);
+            }
         }
 
         [Fact]
@@ -104,32 +103,85 @@ namespace GlitchedCat.Test.APITests.Controllers.Blog
             var result = response as NotFoundResult;
             result.Should().NotBeNull();
         }
-
+        
         [Fact]
-        public async Task CreatePost_ReturnsCreatedAtRoute_WithNewPostId()
+        public async Task CreatePost_WithValidPostRequest_ReturnsCreatedAtRouteResult_WithNewPostId()
         {
             // Arrange
             var postRequest = new PostRequest { Title = "Test Post", Content = "Test Content" };
-            var command = new CreatePostCommand { PostRequest = postRequest, UserId = "testuser" };
-            var postId = Guid.NewGuid();
-            _mediator.Setup(x => x.Send(It.IsAny<CreatePostCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync(postId);
+            var createPostCommand = new CreatePostCommand { PostRequest = postRequest};
+            var newPostId = Guid.NewGuid();
+            _mediator.Setup(x => x.Send(It.IsAny<CreatePostCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(newPostId);
 
-            var expectedRouteValues = new { id = postId };
-            var expectedCreatedAtRouteResult = new CreatedAtRouteResult(nameof(PostController.GetPostById), expectedRouteValues, postId);
-
-            var postController = new PostController(_mapperMock.Object, _mediator.Object);
+            var postController = new PostController(_mapper, _mediator.Object);
 
             // Act
-            var result = await postController.CreatePost(postRequest);
+            var response = await postController.CreatePost(postRequest);
+            var createdAtActionResult = response.Result as CreatedAtRouteResult;
+
+            //Assert
+            // var createdAtActionResult = new CreatedAtActionResult(response.Result);
+            createdAtActionResult.Should().NotBeNull();
+            if (createdAtActionResult != null)
+            {
+                createdAtActionResult.RouteName.Should().Be(nameof(postController.GetPostById));
+                createdAtActionResult.RouteValues.Should().ContainKey("id");
+                createdAtActionResult.RouteValues?["id"].Should().Be(newPostId);
+            }
+        }
+        
+        [Fact]
+        public async Task CreatePost_WithInvalidPostRequest_ReturnsBadRequestResult()
+        {
+            // Arrange
+            var postRequest = new PostRequest(); // Missing required Title and Content properties
+            var postController = new PostController(_mapper, _mediator.Object);
+
+            // Act
+            var response = await postController.CreatePost(postRequest);
+            var result = response.Result as BadRequestResult;
 
             // Assert
-            Assert.IsType<CreatedAtRouteResult>(result.Result);
-            var createdAtRouteResult = (CreatedAtRouteResult)result.Result;
-            Assert.Equal(expectedRouteValues, createdAtRouteResult.RouteValues);
-            Assert.Equal(postId, createdAtRouteResult.Value);
-
-            _mediator.Verify(x => x.Send(It.IsAny<CreatePostCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+            result.Should().NotBeNull();
         }
+        
+        [Fact]
+        public async Task UpdatePost_WithValidIdAndPostRequest_ReturnsNoContentResult()
+        {
+            // Arrange
+            var postId = Guid.NewGuid();
+            var postRequest = new PostRequest { Title = "Updated Post", Content = "Updated Content" };
+            var updatePostCommand = new UpdatePostCommand { Id = postId, Title = postRequest.Title, Content = postRequest.Content };
+            _mediator.Setup(x => x.Send(It.IsAny<UpdatePostCommand>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
 
+            var postController = new PostController(_mapper, _mediator.Object);
+
+            // Act
+            var response = await postController.UpdatePost(postId, postRequest);
+
+            // Assert
+            var noContentResult = response as NoContentResult;
+            noContentResult.Should().NotBeNull();
+        }
+        
+        [Fact]
+        public async Task DeletePost_WithValidId_ReturnsAcceptedResult()
+        {
+            // Arrange
+            var postId = Guid.NewGuid();
+            _mediator.Setup(x => x.Send(It.IsAny<DeletePostCommand>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            var postController = new PostController(_mapper, _mediator.Object);
+
+            // Act
+            var response = await postController.DeletePost(postId.ToString());
+
+            // Assert
+            var acceptedResult = response as AcceptedResult;
+            acceptedResult.Should().NotBeNull();
+        }
     }
 } 

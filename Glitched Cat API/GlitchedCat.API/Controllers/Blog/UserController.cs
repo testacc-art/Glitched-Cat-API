@@ -50,6 +50,11 @@ namespace GlitchedCat.API.Controllers.Blog
         {
             var command = _mapper.Map<CreateUserCommand>(userRequest);
             var result = await _mediator.Send(command);
+            
+            if (result == Guid.Empty)
+            {
+                return BadRequest();
+            }
 
             return CreatedAtAction(nameof(GetUserById), new { id = result }, _mapper.Map<UserResponse>(result));
         }
