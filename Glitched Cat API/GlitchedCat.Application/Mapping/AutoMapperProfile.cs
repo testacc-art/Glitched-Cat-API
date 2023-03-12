@@ -52,6 +52,9 @@ namespace GlitchedCat.Application.Mapping
             CreateMap<UserRequest, CreateUserCommand>()
                 .ForMember(dest => dest.UserRequest, opt => opt.MapFrom(src => src));
             
+            CreateMap<UserRequest, UpdateUserCommand>()
+                .ForMember(dest => dest.UserRequest, opt => opt.MapFrom(src => src));
+            
             CreateMap<CreateUserCommand, User>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserRequest.Name))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.UserRequest.Email));

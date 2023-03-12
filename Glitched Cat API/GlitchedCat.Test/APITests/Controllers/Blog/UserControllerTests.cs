@@ -168,5 +168,27 @@ namespace GlitchedCat.Test.APITests.Controllers.Blog
             var noContentResult = response as NoContentResult;
             noContentResult.Should().NotBeNull();
         }
+        
+        [Fact]
+        public async Task DeleteUser_WithValidId_ReturnsNoContentResult()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var getUserByIdQuery = new GetUserByIdQuery { Id = userId };
+            var userResponse = new UserResponse { Id = userId };
+            _mediator.Setup(x => x.Send(getUserByIdQuery, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(userResponse);
+            _mediator.Setup(x => x.Send(It.IsAny<DeleteUserCommand>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            var userController = new UserController(_mapper, _mediator.Object);
+
+            // Act
+            var response = await userController.DeleteUser(userId);
+
+            // Assert
+            var noContentResult = response as NoContentResult;
+            noContentResult.Should().NotBeNull();
+        }
     }
 }
